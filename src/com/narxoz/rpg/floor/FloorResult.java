@@ -12,7 +12,7 @@ public class FloorResult {
         this.summary = summary;
     }
 
-    public boolean isCleared()      { return cleared; }
-    public int getDamageTaken()     { return damageTaken; }
-    public String getSummary()      { return summary; }
+    public boolean isCleared() { return cleared; }
+    public int getDamageTaken() { return damageTaken; }
+    public String getSummary() { return summary; }
 }
