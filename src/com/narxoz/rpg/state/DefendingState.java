@@ -29,7 +29,7 @@ public class DefendingState implements HeroState {
     public void onTurnEnd(Hero hero) {
         turnsRemaining--;
         if (turnsRemaining <= 0) {
-            System.out.println(">>> " + hero.getName() + " lowers their shield.");
+            System.out.println(">>> " + hero.getName() + " lowers their shield");
             hero.setState(new NormalState());
         }
     }

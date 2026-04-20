@@ -1,7 +1,6 @@
 package com.narxoz.rpg.tower;
 
 public class TowerRunResult {
-
     private final int floorsCleared;
     private final int heroesSurviving;
     private final boolean reachedTop;
