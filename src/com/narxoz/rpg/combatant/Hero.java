@@ -1,6 +1,7 @@
 package com.narxoz.rpg.combatant;
 
 import com.narxoz.rpg.state.HeroState;
+import com.narxoz.rpg.state.NormalState;
 
 public class Hero {
     private final String name;
@@ -16,6 +17,7 @@ public class Hero {
         this.maxHp = hp;
         this.attackPower = attackPower;
         this.defense = defense;
+        this.state = new NormalState();
     }
 
     public void setState(HeroState state) {
@@ -36,6 +38,14 @@ public class Hero {
     public void takeDamage(int amount) {
         int modifiedDamage = state.modifyIncomingDamage(amount);
         hp = Math.max(0, hp - modifiedDamage);
+    }
+
+    public void startTurn() {
+        state.onTurnStart(this);
+    }
+
+    public void endTurn() {
+        state.onTurnEnd(this);
     }
 
     public void heal(int amount) {
