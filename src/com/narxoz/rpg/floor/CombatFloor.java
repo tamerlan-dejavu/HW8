@@ -2,6 +2,7 @@ package com.narxoz.rpg.floor;
 
 import com.narxoz.rpg.combatant.Hero;
 import com.narxoz.rpg.combatant.Monster;
+import com.narxoz.rpg.state.DefendingState;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +35,6 @@ public class CombatFloor extends TowerFloor {
             monsters.add(new Monster("Goblin " + (i + 1), monsterHp, monsterAttack));
         }
         System.out.println(monsterCount + " goblins spawn!");
-
-        for (Hero hero : party) {
-            hero.startTurn();
-        }
     }
 
     @Override
@@ -52,8 +49,12 @@ public class CombatFloor extends TowerFloor {
             System.out.println("\n--- Round " + round + " ---");
 
             for (Hero hero : party) {
-                if (!hero.isAlive() || !hero.getState().canAct()) {
-                    if (!hero.getState().canAct()) {
+                hero.startTurn();
+            }
+
+            for (Hero hero : party) {
+                if (!hero.isAlive() || !hero.canAct()) {
+                    if (hero.isAlive() && !hero.canAct()) {
                         System.out.println(hero.getName() + " cannot act (" + hero.getState().getName() + ")");
                     }
                     continue;
@@ -63,7 +64,7 @@ public class CombatFloor extends TowerFloor {
 
                 if (target != null) {
                     int baseDamage = hero.getAttackPower();
-                    int modifiedDamage = hero.getState().modifyOutgoingDamage(baseDamage);
+                    int modifiedDamage = hero.calculateAttack();
                     target.takeDamage(modifiedDamage);
                     System.out.println(hero.getName() + " attacks " + target.getName() + " for " + modifiedDamage + " damage (base: " + baseDamage + ")");
                     if (!target.isAlive()) {
@@ -81,6 +82,11 @@ public class CombatFloor extends TowerFloor {
                         hero.takeDamage(damage);
                         System.out.println(monster.getName() + " attacks " + hero.getName() + " for " + damage + " damage. " + hero.getName() + " HP: " + hero.getHp());
                         totalDamageTaken += damage;
+
+                        if (hero.isAlive() && hero.getHp() < hero.getMaxHp() * 0.4 && !(hero.getState() instanceof DefendingState)) {
+                            hero.setState(new DefendingState());
+                            System.out.println(">>> " + hero.getName() + " is badly wounded and takes a defensive stance! [State: Defending]");
+                        }
                         break;
                     }
                 }

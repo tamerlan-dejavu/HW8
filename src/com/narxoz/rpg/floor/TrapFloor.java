@@ -1,6 +1,7 @@
 package com.narxoz.rpg.floor;
 
 import com.narxoz.rpg.combatant.Hero;
+import com.narxoz.rpg.state.StunnedState;
 import java.util.List;
 import java.util.Random;
 
@@ -29,9 +30,6 @@ public class TrapFloor extends TowerFloor {
     protected void setup(List<Hero> party) {
         System.out.println("The corridor is filled with pressure plates, spikes, and poisoned darts");
         trapsDodged = 0;
-        for (Hero hero : party) {
-            hero.startTurn();
-        }
     }
 
     @Override
@@ -40,6 +38,10 @@ public class TrapFloor extends TowerFloor {
         System.out.println("\nNavigating the deadly corridor\n");
         for (int trapIdx = 1; trapIdx <= 3; trapIdx++) {
             System.out.println(">>> Trap " + trapIdx + " Triggered ---");
+
+            for (Hero hero : party) {
+                hero.startTurn();
+            }
 
             for (Hero hero : party) {
                 if (!hero.isAlive()) {
@@ -55,6 +57,11 @@ public class TrapFloor extends TowerFloor {
                     hero.takeDamage(damage);
                     System.out.println(hero.getName() + " is hit! Takes " + damage + " damage (HP: " + hero.getHp() + ")");
                     totalDamageTaken += damage;
+
+                    if (hero.isAlive() && hero.getHp() < hero.getMaxHp() * 0.5 && !(hero.getState() instanceof StunnedState)) {
+                        hero.setState(new StunnedState());
+                        System.out.println(">>> The impact leaves " + hero.getName() + " dazed! [State: Stunned]");
+                    }
                 }
             }
 
@@ -71,11 +78,7 @@ public class TrapFloor extends TowerFloor {
 
     @Override
     protected boolean shouldAwardLoot(FloorResult result) {
-        boolean award = result.isCleared() && trapsDodged >= 2;
-        if (!award) {
-            System.out.println("Not enough dodges (" + trapsDodged + " < 2) - no treasure found");
-        }
-        return award;
+        return result.isCleared() && trapsDodged >= 2;
     }
 
     @Override
@@ -92,6 +95,9 @@ public class TrapFloor extends TowerFloor {
 
     @Override
     protected void cleanup(List<Hero> party) {
+        if (trapsDodged < 2) {
+            System.out.println("Not enough dodges (" + trapsDodged + " < 2) - no treasure found");
+        }
         System.out.println("Disabled the remaining trap mechanisms");
     }
 }

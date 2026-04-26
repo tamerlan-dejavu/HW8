@@ -15,9 +15,7 @@ public abstract class TowerFloor {
         return result;
     }
 
-    protected void announce() {
-        System.out.println("\n--- Entering " + getFloorName() + " ---");
-    }
+    protected abstract void announce();
 
     protected abstract void setup(List<Hero> party);
 
@@ -29,9 +27,7 @@ public abstract class TowerFloor {
 
     protected abstract void awardLoot(List<Hero> party, FloorResult result);
 
-    protected void cleanup(List<Hero> party) {
-        
-    }
+    protected void cleanup(List<Hero> party) {}
 
     protected abstract String getFloorName();
 }

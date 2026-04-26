@@ -51,4 +51,12 @@ public class Hero {
     public void heal(int amount) {
         hp = Math.min(maxHp, hp + amount);
     }
+
+    public boolean canAct() {
+        return state.canAct();
+    }
+
+    public int calculateAttack() {
+        return state.modifyOutgoingDamage(attackPower);
+    }
 }

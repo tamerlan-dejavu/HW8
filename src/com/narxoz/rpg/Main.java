@@ -4,8 +4,8 @@ import com.narxoz.rpg.combatant.Hero;
 import com.narxoz.rpg.floor.CombatFloor;
 import com.narxoz.rpg.floor.RestFloor;
 import com.narxoz.rpg.floor.TrapFloor;
+import com.narxoz.rpg.floor.TowerFloor;
 import com.narxoz.rpg.state.BerserkState;
-import com.narxoz.rpg.state.NormalState;
 import com.narxoz.rpg.tower.TowerRunner;
 import com.narxoz.rpg.tower.TowerRunResult;
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         List<Hero> party = createParty();
-        List<Object> floors = createTower();
-        TowerRunner runner = new TowerRunner(party, (List) floors );
+        List<TowerFloor> floors = createTower();
+        TowerRunner runner = new TowerRunner(party, floors);
         TowerRunResult result = runner.execute();
 
         System.out.println("==============================================");
@@ -31,7 +31,6 @@ public class Main {
         List<Hero> party = new ArrayList<>();
 
         Hero hero1 = new Hero("Aragorn", 100, 15, 8);
-        hero1.setState(new NormalState());
         party.add(hero1);
 
         Hero hero2 = new Hero("Legolas", 80, 18, 6);
@@ -44,8 +43,8 @@ public class Main {
         return party;
     }
 
-    private static List<Object> createTower() {
-        List<Object> floors = new ArrayList<>();
+    private static List<TowerFloor> createTower() {
+        List<TowerFloor> floors = new ArrayList<>();
 
         floors.add(new CombatFloor(2, 30, 8));
         floors.add(new RestFloor(25));
